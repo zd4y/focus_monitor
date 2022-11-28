@@ -2,8 +2,13 @@
 name = "focus_monitor"
 version = "0.1.0"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+description = "Library for iterating over the focused window each time it changes"
+homepage = "https://github.com/zd4y/focus_monitor/"
+repository = "https://github.com/zd4y/focus_monitor/"
+readme = "README.md"
+license = "MIT"
+keywords = ["window", "focus", "active", "x11", "monitor"]
+categories = ["os::linux-apis", "api-bindings"]
 
 [dependencies]
 anyhow = "1.0.66"
