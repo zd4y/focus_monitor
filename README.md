@@ -1,6 +1,6 @@
 # Iterator over focused window change on Linux
 
-### Example usage:
+## Example usage:
 
 The following will print the window that gets focused every time the active window changes.
 
@@ -17,5 +17,26 @@ fn main() -> anyhow::Result<()> {
     }
 
     Ok(())
+}
+```
+
+### Async
+
+To enable `AsyncFocusMonitor` use `features=["tokio"]` in `Cargo.toml`:
+
+```
+focus_monitor = { version = "0.1", features = ["tokio"] }
+```
+
+And you can use it like this:
+
+```rust
+use focus_monitor::AsyncFocusMonitor;
+
+#[tokio::main]
+async fn main() -> anyhow::Result<()> {
+    let mut focus_monitor = AsyncFocusMonitor::try_new()?;
+    let window = focus_monitor.recv().await?;
+    println!("{:?}", window);
 }
 ```
