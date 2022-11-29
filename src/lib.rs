@@ -18,8 +18,14 @@
 //! # }
 //! ```
 
+#[cfg(feature = "tokio")]
+mod async_monitor;
+
 mod monitor;
 mod window;
+
+#[cfg(feature = "tokio")]
+pub use async_monitor::AsyncFocusMonitor;
 
 pub use monitor::FocusMonitor;
 pub use window::Window;
