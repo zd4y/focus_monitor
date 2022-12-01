@@ -66,14 +66,13 @@ fn get_window_title(conn: &xcb::Connection, window: x::Window) -> Result<String>
         delete: false,
         window,
         property: x::ATOM_WM_NAME,
-        r#type: x::ATOM_STRING,
+        r#type: x::ATOM_ANY,
         long_offset: 0,
         long_length: 1024,
     });
     let reply = conn.wait_for_reply(cookie)?;
-    Ok(str::from_utf8(reply.value())
-        .context("The WM_NAME property is not valid UTF-8")?
-        .to_string())
+    let title = String::from_utf8_lossy(reply.value());
+    Ok(title.to_string())
 }
 
 fn get_window_class(conn: &xcb::Connection, window: x::Window) -> Result<(String, String)> {
