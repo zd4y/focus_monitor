@@ -1,7 +1,7 @@
 use crate::{FocusMonitor, Window};
 
 use anyhow::Result;
-use std::{future, thread};
+use std::thread;
 use tokio::sync::mpsc::{self, Receiver};
 
 pub struct AsyncFocusMonitor {
@@ -22,6 +22,10 @@ impl AsyncFocusMonitor {
     }
 
     pub async fn recv(&mut self) -> Result<Option<Window>> {
-        future::poll_fn(|cx| self.rx.poll_recv(cx)).await.unwrap()
+        self.rx.recv().await.unwrap()
+    }
+
+    pub fn try_recv(&mut self) -> Result<Option<Window>> {
+        self.rx.try_recv()?
     }
 }
