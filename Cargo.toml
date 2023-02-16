@@ -1,6 +1,6 @@
 [package]
 name = "focus_monitor"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2021"
 description = "Library for iterating over the focused window each time it changes"
 homepage = "https://github.com/zd4y/focus_monitor/"
