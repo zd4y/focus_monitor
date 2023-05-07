@@ -7,6 +7,7 @@ pub struct FocusMonitor {
     conn: Connection,
     root_window: x::Window,
     atom_active_window: x::Atom,
+    last_window: Option<x::Window>,
 }
 
 impl FocusMonitor {
@@ -39,20 +40,31 @@ impl FocusMonitor {
             conn,
             root_window,
             atom_active_window,
+            last_window: None,
         })
     }
 
-    fn wait_for_window_change(&self) -> Result<x::Window> {
+    fn wait_for_window_change(&mut self) -> Result<x::Window> {
         let event = self.conn.wait_for_event()?;
         if let Event::X(x::Event::PropertyNotify(ev)) = event {
             if ev.atom() == self.atom_active_window {
-                return get_active_window(&self.conn, self.root_window, self.atom_active_window);
+                let window =
+                    get_active_window(&self.conn, self.root_window, self.atom_active_window)?;
+
+                if let Some(last_window) = self.last_window {
+                    if window == last_window {
+                        return self.wait_for_window_change();
+                    }
+                }
+
+                self.last_window = Some(window);
+                return Ok(window);
             }
         }
         self.wait_for_window_change()
     }
 
-    fn get_next_window(&self) -> Result<Option<Window>> {
+    fn get_next_window(&mut self) -> Result<Option<Window>> {
         let window = self.wait_for_window_change()?;
         if window == x::WINDOW_NONE {
             return Ok(None);
