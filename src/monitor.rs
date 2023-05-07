@@ -46,15 +46,10 @@ impl FocusMonitor {
         let event = self.conn.wait_for_event()?;
         if let Event::X(x::Event::PropertyNotify(ev)) = event {
             if ev.atom() == self.atom_active_window {
-                let window =
-                    get_active_window(&self.conn, self.root_window, self.atom_active_window)?;
-                Ok(window)
-            } else {
-                self.wait_for_window_change()
+                return get_active_window(&self.conn, self.root_window, self.atom_active_window);
             }
-        } else {
-            self.wait_for_window_change()
         }
+        self.wait_for_window_change()
     }
 
     fn get_next_window(&self) -> Result<Option<Window>> {
